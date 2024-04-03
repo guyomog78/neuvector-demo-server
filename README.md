@@ -1,5 +1,7 @@
 # Neuvector Demo Server
 
+It's a https://github.com/AlphaBravoCompany/neuvector-demo-server fork
+
 ## About Neuvector (now part of SUSE)
 
 NeuVector Full Lifecycle Container Security Platform delivers the only cloud-native security with uncompromising end-to-end protection from DevOps vulnerability protection to automated run-time security, and featuring a true Layer 7 container firewall.
@@ -20,7 +22,7 @@ NeuVector Full Lifecycle Container Security Platform delivers the only cloud-nat
 This script is for demo purposes only. It deploys a bare minimum, single node K3s Kubernetes cluster, Longhorn Storage, and the Beta of Neuvector and provides links to the interfaces and login information.
 
 ## Prerequisites
-- Ubuntu 20.04+ Server
+- Ubuntu 20.04+ Server (last update OK on UBUNTU 23.10)
 - Minimum Recommended 4vCPU and 8GB of RAM (Try Hetzner or DigitalOcean)
 - DNS or Hosts file entry pointing to server IP
 
@@ -31,11 +33,11 @@ This script is for demo purposes only. It deploys a bare minimum, single node K3
 - Rancher UI
 - Longhorn Storage
 - cert-manager
-- Neuvector 5 Beta
+- Neuvector
 
 ## Full Server Setup with Neuvector Helm Chart
 
-1. `git clone https://github.com/AlphaBravoCompany/neuvector-demo-server.git`
+1. `git clone https://github.com/guyomog78/neuvector-demo-server.git`
 2. `cd neuvector-demo-server`
 3. `chmod +x install-neuvector.sh`
 4. `./install-neuvector.sh subdomain.yourdomain.tld`
@@ -45,19 +47,8 @@ This script is for demo purposes only. It deploys a bare minimum, single node K3
 # Uninstall
 
 1. `/usr/local/bin/k3s-uninstall.sh` (removes K3s, Rancher, Longhorn and Neuvector)
+2. remove `~/.kube/config` if new test is planned
 
 ## Special Thanks
 
-Thanks to Andy Clemenko for his expertise and repos for providing the foundation for this script.
-
-- Andy's Github: https://github.com/clemenko/sr_tools
-
-## About Alphabravo
-
-**AlphaBravo** provides products, services, and training for Kubernetes, Cloud, and DevSecOps. We are a Rancher and SUSE partner.
-
-Contact **AB** today to learn how we can help you.
-
-* **Web:** https://alphabravo.io
-* **Email:** info@alphabravo.io
-* **Phone:** 301-337-8141
+Thanks to Alphabravo for source of this script, remember, it's a fork.

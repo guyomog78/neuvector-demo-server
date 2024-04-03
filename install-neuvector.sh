@@ -50,14 +50,15 @@ export KUBECONFIG=~/.kube/config  > /dev/null
 
 ## Wait for K3s to come online
 echo "Waiting for K3s to come online...."
-until [ $(kubectl get nodes|grep Ready | wc -l) = 1 ]; do echo -n "." ; sleep 2; done  > /dev/null
+sleep 5
+until [ $(kubectl get nodes|grep Ready | wc -l) = 1 ]; do echo -n "." ; sleep 10; done  > /dev/null
 
 ## Install Longhorn
 echo "Deploying Longhorn on K3s..."
 kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}' > /dev/null
 helm repo add longhorn https://charts.longhorn.io > /dev/null
 helm repo update > /dev/null
-helm install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace > /dev/null
+helm upgrade --install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace > /dev/null
 
 ## Wait for Longhorn
 echo "Waiting for Longhorn deployment to finish..."
@@ -67,8 +68,7 @@ until [ $(kubectl -n longhorn-system rollout status deploy/longhorn-ui|grep succ
 echo "Deploying Neuvector on K3s..."
 helm repo add neuvector https://neuvector.github.io/neuvector-helm/ > /dev/null
 helm repo update > /dev/null
-kubectl create namespace neuvector > /dev/null
-helm install neuvector --namespace neuvector neuvector/core -f https://gist.githubusercontent.com/mjtechguy/cc247abf0e7ef0ede2d9ec1abb8ccd9b/raw/dc112455667efd577f952ff129892f710899d2a8/values.yaml > /dev/null
+helm upgrade --install neuvector --namespace neuvector neuvector/core -f ./values.yaml --create-namespace > /dev/null
 
 ## Wait for Neuvector
 echo "Waiting for Neuvector to come online..."
@@ -84,7 +84,7 @@ export NEUVECTORUI=https://$NODE_IP:$NODE_PORT > /dev/null
 ## Install Cert-Manager
 # Install the CustomResourceDefinition resources separately
 echo "Deploying cert-manager on K3s..."
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.crds.yaml > /dev/null
+# kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.crds.yaml > /dev/null
 
 # Add the Jetstack Helm repository
 helm repo add jetstack https://charts.jetstack.io > /dev/null
@@ -93,9 +93,10 @@ helm repo add jetstack https://charts.jetstack.io > /dev/null
 helm repo update > /dev/null
 
 # Install the cert-manager Helm chart
-helm install \
+helm upgrade --install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
+  --set installCRDs=true \
   --create-namespace  > /dev/null
 
 ## Wait for cert-manager
@@ -105,10 +106,10 @@ until [ $(kubectl -n cert-manager rollout status deploy/cert-manager|grep succes
 ## Install Rancher
 echo "Deploying Rancher on K3s..."
 helm repo add rancher-stable https://releases.rancher.com/server-charts/stable > /dev/null
-kubectl create namespace cattle-system > /dev/null
-helm install rancher rancher-stable/rancher \
+helm upgrade --install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname=$1 > /dev/null
+  --set hostname=$1 \
+  --create-namespace > /dev/null
 
 ## Wait for Rancher
 echo "Waiting for Rancher UI to come online...."
