@@ -42,7 +42,7 @@ rm ./get_helm.sh  > /dev/null
 
 ## Install K3s
 echo "Installing K3s..."
-sudo curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.27.11+k3s1 sh -  > /dev/null
+sudo curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.30.4+k3s1 sh -  > /dev/null
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml  > /dev/null
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
 sudo chown $USER:$USER ~/.kube/config
